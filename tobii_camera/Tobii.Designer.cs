@@ -33,6 +33,9 @@
             this.label_point = new System.Windows.Forms.Label();
             this.textBox_interval = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label_L = new System.Windows.Forms.Label();
+            this.label_R = new System.Windows.Forms.Label();
+            this.label_angle = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button_start
@@ -47,9 +50,10 @@
             // 
             // button_stop
             // 
-            this.button_stop.Location = new System.Drawing.Point(12, 107);
+            this.button_stop.Font = new System.Drawing.Font("MS UI Gothic", 120F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_stop.Location = new System.Drawing.Point(12, 64);
             this.button_stop.Name = "button_stop";
-            this.button_stop.Size = new System.Drawing.Size(733, 482);
+            this.button_stop.Size = new System.Drawing.Size(733, 479);
             this.button_stop.TabIndex = 1;
             this.button_stop.Text = "stop";
             this.button_stop.UseVisualStyleBackColor = true;
@@ -58,35 +62,68 @@
             // label_point
             // 
             this.label_point.AutoSize = true;
-            this.label_point.Location = new System.Drawing.Point(299, 43);
+            this.label_point.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_point.Location = new System.Drawing.Point(279, 28);
             this.label_point.Name = "label_point";
-            this.label_point.Size = new System.Drawing.Size(85, 12);
+            this.label_point.Size = new System.Drawing.Size(128, 27);
             this.label_point.TabIndex = 2;
-            this.label_point.Text = "gaze_point=(x,y)";
+            this.label_point.Text = "point=(x,y)";
             // 
             // textBox_interval
             // 
-            this.textBox_interval.Location = new System.Drawing.Point(390, 15);
+            this.textBox_interval.Location = new System.Drawing.Point(379, 12);
             this.textBox_interval.Name = "textBox_interval";
             this.textBox_interval.Size = new System.Drawing.Size(28, 19);
             this.textBox_interval.TabIndex = 3;
-            this.textBox_interval.Text = "100";
+            this.textBox_interval.Text = "10";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(289, 18);
+            this.label1.Location = new System.Drawing.Point(278, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 12);
             this.label1.TabIndex = 4;
             this.label1.Text = "割り込み周期(ms)";
+            // 
+            // label_L
+            // 
+            this.label_L.AutoSize = true;
+            this.label_L.Location = new System.Drawing.Point(451, 9);
+            this.label_L.Name = "label_L";
+            this.label_L.Size = new System.Drawing.Size(46, 12);
+            this.label_L.TabIndex = 5;
+            this.label_L.Text = "L=(x,y,z)";
+            // 
+            // label_R
+            // 
+            this.label_R.AutoSize = true;
+            this.label_R.Location = new System.Drawing.Point(612, 9);
+            this.label_R.Name = "label_R";
+            this.label_R.Size = new System.Drawing.Size(48, 12);
+            this.label_R.TabIndex = 6;
+            this.label_R.Text = "R=(x,y,z)";
+            // 
+            // label_angle
+            // 
+            this.label_angle.AutoSize = true;
+            this.label_angle.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_angle.Location = new System.Drawing.Point(448, 34);
+            this.label_angle.Name = "label_angle";
+            this.label_angle.Size = new System.Drawing.Size(247, 27);
+            this.label_angle.TabIndex = 7;
+            this.label_angle.Text = "顔角度（絶対，相対）";
+            this.label_angle.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.KeyDown);
             // 
             // Tobii
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(757, 601);
+            this.ClientSize = new System.Drawing.Size(754, 556);
+            this.Controls.Add(this.label_angle);
+            this.Controls.Add(this.label_R);
+            this.Controls.Add(this.label_L);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox_interval);
             this.Controls.Add(this.label_point);
@@ -106,6 +143,9 @@
         private System.Windows.Forms.Label label_point;
         private System.Windows.Forms.TextBox textBox_interval;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_L;
+        private System.Windows.Forms.Label label_R;
+        private System.Windows.Forms.Label label_angle;
 
     }
 }
