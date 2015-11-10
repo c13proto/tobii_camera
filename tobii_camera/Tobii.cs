@@ -84,23 +84,22 @@ namespace tobii_camera
             label_L.Text = "L=(" + (int)左目[0] + "," + (int)左目[1] + "," + (int)左目[2] + ")";
             label_R.Text = "R=(" + (int)右目[0] + "," + (int)右目[1] + "," + (int)右目[2] + ")";
             顔の角度 = 顔の角度計算();
-            label_angle.Text = "顔角度=(" + (int)顔の角度 + "," + (int)(顔の角度 - 顔の角度初期) + ")";
+            label_angle.Text = "顔角度=(" + (int)顔の角度 +  ")";
         }
         double 顔の角度計算()
         {
-            double[] x軸 = { 1, 0, 0 };
-            double[] ベクトル= new double[3];
+            double[] ベクトル= new double[2];
             double angle;
-            for (int i = 0; i < 3;i++ ) ベクトル[i] = 左目[i] - 右目[i];
-
+           ベクトル[0] = 右目[0] - 左目[0];
+           ベクトル[1] = 右目[2] - 左目[2];
             
             if (右目[0] == 0 && 左目[0] == 0) angle = 0;
-            else if (右目[0] == 0) angle = 60;
-            else if (左目[0] == 0) angle = -60;
+            else if (右目[0] == 0) angle = 30;
+            else if (左目[0] == 0) angle = -30;
             else
             {
-                angle = AngleOf2Vector(x軸, ベクトル);
-                if (右目[2] < 左目[2]) angle *= -1;
+                angle = Math.Atan2(ベクトル[1],ベクトル[0]);
+                angle *= 180.0 / Math.PI;
             }
 
             return angle;
@@ -123,46 +122,5 @@ namespace tobii_camera
         }
 
 
-        //ベクトルの長さを計算する
-        double get_vector_length(double[] v)//3次元
-        {
-            return Math.Pow((v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]), 0.5);
-        }
-
-        //ベクトル内積
-        double dot_product(double[] vl, double[] vr)
-        {
-            return vl[0] * vr[0] + vl[1] * vr[1] + vl[2] * vr[2];
-        }
-
-        //２つのベクトルABのなす角度θを求める
-        double AngleOf2Vector(double[] A, double[] B)
-        {
-            //　※ベクトルの長さが0だと答えが出ませんので注意してください。
-
-            //ベクトルAとBの長さを計算する
-            double length_A = get_vector_length(A);
-            double length_B = get_vector_length(B);
-
-            //内積とベクトル長さを使ってcosθを求める
-            double cos_sita = dot_product(A, B) / (length_A * length_B);
-
-            //cosθからθを求める
-            double sita = Math.Acos(cos_sita);
-
-            //ラジアンでなく0～180の角度でほしい場合はコメント外す
-            sita = sita * 180.0 / Math.PI;
-
-            return sita;
-        }
-
-        private void KeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (e.KeyCode == Keys.A)
-            {
-                視線でカーソル操作 = false;
-                timer.Stop();
-            }
-        }
     }
 }

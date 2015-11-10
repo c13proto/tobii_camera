@@ -107,13 +107,12 @@
             // label_angle
             // 
             this.label_angle.AutoSize = true;
-            this.label_angle.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_angle.Location = new System.Drawing.Point(448, 34);
+            this.label_angle.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_angle.Location = new System.Drawing.Point(493, 40);
             this.label_angle.Name = "label_angle";
-            this.label_angle.Size = new System.Drawing.Size(247, 27);
+            this.label_angle.Size = new System.Drawing.Size(128, 14);
             this.label_angle.TabIndex = 7;
             this.label_angle.Text = "顔角度（絶対，相対）";
-            this.label_angle.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.KeyDown);
             // 
             // Tobii
             // 
