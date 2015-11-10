@@ -47,6 +47,7 @@ namespace tobii_camera
         }
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
+
             if(REFRESH)
             {
                 var frame = Cv.QueryFrame(CAPTURE);
