@@ -20,18 +20,18 @@ namespace tobii_camera
         EyeXHost eyexhost = new EyeXHost();
         GazePointDataStream lightlyFilteredGazeDataStream;
         EyePositionDataStream lightFilteredPosDataStream;
-        Point 視点座標;
         double[] 左目初期 = new double[3];//x,y,z
         double[] 右目初期 = new double[3];
         double 顔の角度初期;
 
         double[] 左目 = new double[3];//x,y,z
         double[] 右目 = new double[3];
-        double 顔の角度;
+        public static double 顔の角度;
 
-        bool 視線でカーソル操作 = false;
-
-
+        public static bool 目がない = false;
+        public static string debug = "";
+        public static Point 視点座標;
+             
         public Tobii()
         {
             InitializeComponent();
@@ -71,34 +71,35 @@ namespace tobii_camera
             左目[1] = e.LeftEye.Y; 右目[1] = e.RightEye.Y;
             左目[2] = e.LeftEye.Z; 右目[2] = e.RightEye.Z;
 
+            顔の角度 = 顔の角度計算();
                       
         }
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
-            if (視線でカーソル操作)
-            {
-                //マウスポインタの位置を設定する
-                System.Windows.Forms.Cursor.Position = 視点座標;
-            }
+            if (左目[0] == 0 && 右目[0] == 0) 目がない = true;
+            else 目がない = false;
+
+            if(!目がない&&checkBox_mouse.Checked)System.Windows.Forms.Cursor.Position = 視点座標;
+
             label_point.Text = "Point=(" + 視点座標.X + "," + 視点座標.Y + ")";
             label_L.Text = "L=(" + (int)左目[0] + "," + (int)左目[1] + "," + (int)左目[2] + ")";
             label_R.Text = "R=(" + (int)右目[0] + "," + (int)右目[1] + "," + (int)右目[2] + ")";
-            顔の角度 = 顔の角度計算();
-            label_angle.Text = "顔角度=(" + (int)顔の角度 +  ")";
+            label_angle.Text = "顔角度=(" + (int)(顔の角度*100) +  ")";
+
+            debug = label_angle.Text + "\n" +
+                    label_point.Text;
+                        
         }
         double 顔の角度計算()
         {
-            double[] ベクトル= new double[2];
             double angle;
-           ベクトル[0] = 右目[0] - 左目[0];
-           ベクトル[1] = 右目[2] - 左目[2];
             
             if (右目[0] == 0 && 左目[0] == 0) angle = 0;
-            else if (右目[0] == 0) angle = 30;
-            else if (左目[0] == 0) angle = -30;
+            else if (右目[0] == 0) angle = 60;
+            else if (左目[0] == 0) angle = -60;
             else
             {
-                angle = Math.Atan2(ベクトル[1],ベクトル[0]);
+                angle = Math.Atan2(右目[2] - 左目[2],右目[0] - 左目[0]);
                 angle *= 180.0 / Math.PI;
             }
 
@@ -107,7 +108,6 @@ namespace tobii_camera
         }
         private void Click_start(object sender, EventArgs e)
         {
-            視線でカーソル操作 = true;
             左目初期 = 左目;//初期位置を格納
             右目初期 = 右目;
             顔の角度初期 = 顔の角度計算();
@@ -117,9 +117,9 @@ namespace tobii_camera
 
         private void Click_stop(object sender, EventArgs e)
         {
-            視線でカーソル操作 = false;
             timer.Stop();
         }
+
 
 
     }

@@ -65,3 +65,4 @@ C:\Users\yamamuro\Documents\GitHub\C_sharp\tobii_camera\tobii_camera\bin\x64\Deb
 C:\Users\yamamuro\Documents\GitHub\C_sharp\tobii_camera\tobii_camera\bin\x64\Debug\Tobii.EyeX.Client.dll
 C:\Users\yamamuro\Documents\GitHub\C_sharp\tobii_camera\tobii_camera\bin\x64\Debug\tobii_camera.exe.config
 C:\Users\yamamuro\Documents\GitHub\C_sharp\tobii_camera\tobii_camera\bin\x64\Debug\EyeXFramework.dll
+C:\Users\yamamuro\Documents\GitHub\C_sharp\tobii_camera\tobii_camera\obj\x64\Debug\tobii_camera.描画画面.resources

@@ -36,13 +36,14 @@
             this.label_L = new System.Windows.Forms.Label();
             this.label_R = new System.Windows.Forms.Label();
             this.label_angle = new System.Windows.Forms.Label();
+            this.checkBox_mouse = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button_start
             // 
             this.button_start.Location = new System.Drawing.Point(13, 13);
             this.button_start.Name = "button_start";
-            this.button_start.Size = new System.Drawing.Size(259, 42);
+            this.button_start.Size = new System.Drawing.Size(138, 42);
             this.button_start.TabIndex = 0;
             this.button_start.Text = "start";
             this.button_start.UseVisualStyleBackColor = true;
@@ -114,12 +115,25 @@
             this.label_angle.TabIndex = 7;
             this.label_angle.Text = "顔角度（絶対，相対）";
             // 
+            // checkBox_mouse
+            // 
+            this.checkBox_mouse.AutoSize = true;
+            this.checkBox_mouse.Checked = true;
+            this.checkBox_mouse.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_mouse.Location = new System.Drawing.Point(170, 38);
+            this.checkBox_mouse.Name = "checkBox_mouse";
+            this.checkBox_mouse.Size = new System.Drawing.Size(88, 16);
+            this.checkBox_mouse.TabIndex = 8;
+            this.checkBox_mouse.Text = "mouse_move";
+            this.checkBox_mouse.UseVisualStyleBackColor = true;
+            // 
             // Tobii
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(754, 556);
+            this.Controls.Add(this.checkBox_mouse);
             this.Controls.Add(this.label_angle);
             this.Controls.Add(this.label_R);
             this.Controls.Add(this.label_L);
@@ -128,6 +142,7 @@
             this.Controls.Add(this.label_point);
             this.Controls.Add(this.button_stop);
             this.Controls.Add(this.button_start);
+            this.KeyPreview = true;
             this.Name = "Tobii";
             this.Text = "Tobii";
             this.ResumeLayout(false);
@@ -145,6 +160,7 @@
         private System.Windows.Forms.Label label_L;
         private System.Windows.Forms.Label label_R;
         private System.Windows.Forms.Label label_angle;
+        private System.Windows.Forms.CheckBox checkBox_mouse;
 
     }
 }
