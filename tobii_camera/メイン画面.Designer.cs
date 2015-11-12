@@ -37,8 +37,7 @@
             this.textBox_window_y = new System.Windows.Forms.TextBox();
             this.textBox_window_x = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox_space = new System.Windows.Forms.TextBox();
+            this.button_back = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button_Camera
@@ -63,7 +62,7 @@
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(11, 214);
+            this.button_start.Location = new System.Drawing.Point(12, 195);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(75, 23);
             this.button_start.TabIndex = 2;
@@ -74,16 +73,17 @@
             // label_debug
             // 
             this.label_debug.AutoSize = true;
+            this.label_debug.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label_debug.Location = new System.Drawing.Point(93, 12);
             this.label_debug.Name = "label_debug";
-            this.label_debug.Size = new System.Drawing.Size(35, 12);
+            this.label_debug.Size = new System.Drawing.Size(78, 27);
             this.label_debug.TabIndex = 3;
             this.label_debug.Text = "debug";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 84);
+            this.label1.Location = new System.Drawing.Point(12, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 12);
             this.label1.TabIndex = 4;
@@ -91,15 +91,15 @@
             // 
             // textBox_fps
             // 
-            this.textBox_fps.Location = new System.Drawing.Point(61, 100);
+            this.textBox_fps.Location = new System.Drawing.Point(61, 134);
             this.textBox_fps.Name = "textBox_fps";
             this.textBox_fps.Size = new System.Drawing.Size(25, 19);
             this.textBox_fps.TabIndex = 5;
-            this.textBox_fps.Text = "50";
+            this.textBox_fps.Text = "30";
             // 
             // textBox_window_y
             // 
-            this.textBox_window_y.Location = new System.Drawing.Point(61, 136);
+            this.textBox_window_y.Location = new System.Drawing.Point(61, 170);
             this.textBox_window_y.Name = "textBox_window_y";
             this.textBox_window_y.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_y.TabIndex = 6;
@@ -107,7 +107,7 @@
             // 
             // textBox_window_x
             // 
-            this.textBox_window_x.Location = new System.Drawing.Point(30, 136);
+            this.textBox_window_x.Location = new System.Drawing.Point(30, 170);
             this.textBox_window_x.Name = "textBox_window_x";
             this.textBox_window_x.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_x.TabIndex = 7;
@@ -116,28 +116,21 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 121);
+            this.label2.Location = new System.Drawing.Point(9, 155);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 12);
             this.label2.TabIndex = 8;
             this.label2.Text = "window";
             // 
-            // label3
+            // button_back
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 158);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 12);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "|| の間隔";
-            // 
-            // textBox_space
-            // 
-            this.textBox_space.Location = new System.Drawing.Point(61, 172);
-            this.textBox_space.Name = "textBox_space";
-            this.textBox_space.Size = new System.Drawing.Size(25, 19);
-            this.textBox_space.TabIndex = 10;
-            this.textBox_space.Text = "320";
+            this.button_back.Location = new System.Drawing.Point(11, 92);
+            this.button_back.Name = "button_back";
+            this.button_back.Size = new System.Drawing.Size(75, 23);
+            this.button_back.TabIndex = 9;
+            this.button_back.Text = "background";
+            this.button_back.UseVisualStyleBackColor = true;
+            this.button_back.Click += new System.EventHandler(this.Click_back);
             // 
             // メイン画面
             // 
@@ -145,8 +138,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(316, 267);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox_space);
+            this.Controls.Add(this.button_back);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox_window_x);
             this.Controls.Add(this.textBox_window_y);
@@ -174,8 +166,7 @@
         private System.Windows.Forms.TextBox textBox_window_y;
         private System.Windows.Forms.TextBox textBox_window_x;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox_space;
+        private System.Windows.Forms.Button button_back;
     }
 }
 

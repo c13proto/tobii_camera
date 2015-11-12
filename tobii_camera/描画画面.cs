@@ -32,7 +32,7 @@ namespace tobii_camera
             pictureBoxIpl1.Width = dis_width;
             pictureBoxIpl1.Height = dis_height;
             background = Cv.CreateImage(new CvSize(dis_width, dis_height), BitDepth.U8, 3);
-            background.Zero();
+            background=メイン画面.background;
             pictureBoxIpl1.ImageIpl = background;
             window_size = new CvSize(メイン画面.window[0], メイン画面.window[1]);
 
@@ -56,35 +56,68 @@ namespace tobii_camera
         }
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
-            background.Zero();//背景の初期化
+            var sample = background.Clone();
+
+            視点描画(ref sample);
+            顔の向き描画(ref sample);
+            debug描画(ref sample);
             
+
+            pictureBoxIpl1.RefreshIplImage(sample);
+            sample.Dispose();
+        }
+
+        void 視点描画(ref IplImage src)
+        {
             //視点位置と□
             int point_x, point_y;
-            point_x = Tobii.視点座標.X-window_size.Width/2;
+            point_x = Tobii.視点座標.X - window_size.Width / 2;
             point_y = Tobii.視点座標.Y - window_size.Height / 2;
             if (point_x < 0) point_x = 0;
             if (point_y < 0) point_y = 0;
             if (point_x > dis_width - window_size.Width) point_x = dis_width - window_size.Width;
             if (point_y > dis_height - window_size.Height) point_y = dis_height - window_size.Height;
-            CvPoint point1=new CvPoint(point_x,point_y);
-            CvPoint point2=new CvPoint(point_x+window_size.Width,point_y+window_size.Height);
-            Cv.Rectangle(background,point1,point2, new CvScalar(0, 0, 255),3);
-            Cv.Circle(background, new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y), 5, new CvScalar(255, 255, 255));
+            CvPoint point1 = new CvPoint(point_x, point_y);
+            CvPoint point2 = new CvPoint(point_x + window_size.Width, point_y + window_size.Height);
+            //Cv.Rectangle(src, point1, point2, new CvScalar(0, 0, 255), 3);
+            枠外を塗りつぶす(ref src, new CvRect(point1, window_size));
+            Cv.Circle(src, new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y), 3, new CvScalar(255, 255, 255));
+        }
+        void 枠外を塗りつぶす(ref IplImage src,CvRect rect)
+        {
+            var mask = src.Clone();
+            mask.Zero();
+            Cv.Rectangle(mask, rect, new CvScalar(255, 255, 255), -1);
+            mask.Not(mask);
+            Cv.Add(src, mask, src);
 
-            // ||の表示(向いてる角度)
-            double max_deg=30.0;
-            double angle=Tobii.顔の角度;
-            if(angle>max_deg)angle=max_deg;
-            if(angle<-max_deg)angle=-max_deg;
-            int line_pos = (int)((double)dis_width / 2.0 + ((double)dis_width / 2.0) * (angle / max_deg));
-            if (line_pos < メイン画面.間隔 / 2) line_pos = メイン画面.間隔 / 2;
-            if (line_pos > dis_width - メイン画面.間隔 / 2) line_pos = dis_width - メイン画面.間隔 / 2;
-            Cv.Line(background, new CvPoint(line_pos - メイン画面.間隔 / 2, 0), new CvPoint(line_pos - メイン画面.間隔 / 2, dis_height), new CvScalar(0, 255, 0), 1);
-            Cv.Line(background, new CvPoint(line_pos + メイン画面.間隔 / 2, 0), new CvPoint(line_pos + メイン画面.間隔 / 2, dis_height), new CvScalar(0, 255, 0), 1);
-            
+            mask.Dispose();
+        }
+        void 顔の向き描画(ref IplImage src)
+        {
+            // ||の表示
+            double[] eyes = Tobii.眼球位置;
+            double center=(eyes[0]+eyes[1])/2;
+            int line_pos = dis_width/2;
 
-            pictureBoxIpl1.RefreshIplImage(background);
+            if (eyes[0] == 0 && eyes[1] == 1000) { } //両目が検知できなかったら
+            else if (eyes[0] > 510) line_pos = dis_width;
+            else if (eyes[1] < 490) line_pos=0;
+            else if (eyes[0] > 490) line_pos = dis_width * 5 / 6;
+            else if (eyes[1] < 510) line_pos = dis_width / 6;
+            else if (eyes[0] > 430) line_pos = dis_width * 4 / 6;
+            else if (eyes[1] < 530) line_pos = dis_width * 2 / 6;
+            else line_pos = Width / 2;
 
+            Cv.Line(src, new CvPoint(line_pos, 0), new CvPoint(line_pos, dis_height), new CvScalar(0, 255, 0), 5);
+        }
+        void debug描画(ref IplImage src)
+        {
+            string[] debug=Tobii.debug.Split('\n');
+            CvFont フォント = new CvFont(FontFace.HersheyComplex, 0.5, 0.5);
+            Cv.PutText(src, debug[0], new CvPoint(10, 20), フォント, new CvColor(0, 0, 255));
+            Cv.PutText(src, debug[1], new CvPoint(10, 40), フォント, new CvColor(0, 0, 255));
+            Cv.PutText(src, debug[2], new CvPoint(10, 60), フォント, new CvColor(0, 0, 255));
         }
     }
 }

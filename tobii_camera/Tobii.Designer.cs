@@ -35,7 +35,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label_L = new System.Windows.Forms.Label();
             this.label_R = new System.Windows.Forms.Label();
-            this.label_angle = new System.Windows.Forms.Label();
             this.checkBox_mouse = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -76,7 +75,7 @@
             this.textBox_interval.Name = "textBox_interval";
             this.textBox_interval.Size = new System.Drawing.Size(28, 19);
             this.textBox_interval.TabIndex = 3;
-            this.textBox_interval.Text = "10";
+            this.textBox_interval.Text = "33";
             // 
             // label1
             // 
@@ -90,36 +89,26 @@
             // label_L
             // 
             this.label_L.AutoSize = true;
-            this.label_L.Location = new System.Drawing.Point(451, 9);
+            this.label_L.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_L.Location = new System.Drawing.Point(437, 9);
             this.label_L.Name = "label_L";
-            this.label_L.Size = new System.Drawing.Size(46, 12);
+            this.label_L.Size = new System.Drawing.Size(41, 27);
             this.label_L.TabIndex = 5;
-            this.label_L.Text = "L=(x,y,z)";
+            this.label_L.Text = "L=";
             // 
             // label_R
             // 
             this.label_R.AutoSize = true;
-            this.label_R.Location = new System.Drawing.Point(612, 9);
+            this.label_R.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_R.Location = new System.Drawing.Point(573, 9);
             this.label_R.Name = "label_R";
-            this.label_R.Size = new System.Drawing.Size(48, 12);
+            this.label_R.Size = new System.Drawing.Size(43, 27);
             this.label_R.TabIndex = 6;
-            this.label_R.Text = "R=(x,y,z)";
-            // 
-            // label_angle
-            // 
-            this.label_angle.AutoSize = true;
-            this.label_angle.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_angle.Location = new System.Drawing.Point(493, 40);
-            this.label_angle.Name = "label_angle";
-            this.label_angle.Size = new System.Drawing.Size(128, 14);
-            this.label_angle.TabIndex = 7;
-            this.label_angle.Text = "顔角度（絶対，相対）";
+            this.label_R.Text = "R=";
             // 
             // checkBox_mouse
             // 
             this.checkBox_mouse.AutoSize = true;
-            this.checkBox_mouse.Checked = true;
-            this.checkBox_mouse.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_mouse.Location = new System.Drawing.Point(170, 38);
             this.checkBox_mouse.Name = "checkBox_mouse";
             this.checkBox_mouse.Size = new System.Drawing.Size(88, 16);
@@ -134,7 +123,6 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(754, 556);
             this.Controls.Add(this.checkBox_mouse);
-            this.Controls.Add(this.label_angle);
             this.Controls.Add(this.label_R);
             this.Controls.Add(this.label_L);
             this.Controls.Add(this.label1);
@@ -159,7 +147,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_L;
         private System.Windows.Forms.Label label_R;
-        private System.Windows.Forms.Label label_angle;
         private System.Windows.Forms.CheckBox checkBox_mouse;
 
     }
