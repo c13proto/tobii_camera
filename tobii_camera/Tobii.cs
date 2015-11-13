@@ -19,21 +19,23 @@ namespace tobii_camera
         private Timer timer;
         EyeXHost eyexhost = new EyeXHost();
         GazePointDataStream lightlyFilteredGazeDataStream;
-        EyePositionDataStream lightFilteredPosDataStream;
+        EyePositionDataStream PosDataStream;
+        
 
         //眼球位置
-        List<int> POS_L=new List<int>();//平均化するためlist型(x座標のみ
+        List<int> POS_L=new List<int>();//平均化のためlist型(x座標のみ
         List<int> POS_R=new List<int>();
+        int l_counter,r_counter;//ノイズ除去のためのカウンタ
 
         //視点座標
-        List<int> POINT_X=new List<int>();//平均化するためlist型
+        List<int> POINT_X=new List<int>();
         List<int> POINT_Y=new List<int>();
 
         public static bool 目がない = false;
         public static string debug = "";
         public static Point 視点座標;
-        public static double[] 眼球位置=new double[2];
-             
+        public static int[] 眼球位置=new int[2];
+        public static int pos_max = 1000;
         public Tobii()
         {
             InitializeComponent();
@@ -42,8 +44,8 @@ namespace tobii_camera
             eyexhost.Start();
             lightlyFilteredGazeDataStream = eyexhost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
             lightlyFilteredGazeDataStream.Next += (s, e) => 視点情報格納(s, e);
-            lightFilteredPosDataStream=eyexhost.CreateEyePositionDataStream();
-            lightFilteredPosDataStream.Next += (s, e) => 眼球位置情報格納(s, e);
+            PosDataStream=eyexhost.CreateEyePositionDataStream();
+            PosDataStream.Next += (s, e) => 眼球位置情報格納(s, e);//何かしらフィルタかけるべきかも
 
 
             timer.Interval = int.Parse(textBox_interval.Text);
@@ -71,11 +73,27 @@ namespace tobii_camera
         {
             //double[] left = { e.LeftEyeNormalized.X, e.LeftEyeNormalized.Y, e.LeftEyeNormalized.Z};
             //double[] right = { e.RightEyeNormalized.X, e.RightEyeNormalized.Y, e.RightEyeNormalized.Z };
-            if (e.LeftEyeNormalized.X == 0) POS_L.Add(0);
-            else POS_L.Add((int)(1000-e.LeftEyeNormalized.X*1000));//x座標だけでいい気がしてきた
-            if (e.RightEyeNormalized.X == 0) POS_R.Add(1000);
-            else POS_R.Add((int)(1000-e.RightEyeNormalized.X*1000));
-
+            const int limit = 3;
+            if (e.LeftEyeNormalized.X == 0)
+            {
+                l_counter++;
+                if (l_counter > limit) POS_L.Add(0);//limit回連続で0が来たら
+            }
+            else
+            {
+                POS_L.Add((int)(pos_max - e.LeftEyeNormalized.X * pos_max));//x座標だけでいい気がしてきた
+                l_counter = 0;
+            }
+            if (e.RightEyeNormalized.X == 0)
+            {
+                r_counter++;
+                if (r_counter > limit) POS_R.Add(pos_max);
+            }
+            else
+            {
+                POS_R.Add((int)(pos_max - e.RightEyeNormalized.X * pos_max));
+                r_counter = 0;
+            }
         }
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
@@ -94,7 +112,8 @@ namespace tobii_camera
             label_R.Text = "R=" + 眼球位置[1];
 
             debug = "count(pos,point)=(" + POS_R.Count +","+POINT_X.Count+")"+ "\n" +
-                    "Position=" + ((眼球位置[1]+眼球位置[0])/2-500) + "\n" +
+                    "Position=" + ((眼球位置[1] + 眼球位置[0]) / 2 - pos_max/2) + "\n" +
+                    "diff=" + (眼球位置[1] - 眼球位置[0]) + "\n" +
                     "Point=(" + 視点座標.X + "," + 視点座標.Y + ")";
 
             POS_L.Clear();
@@ -120,7 +139,6 @@ namespace tobii_camera
             for (int i = 0; i < data.Count; i++) ave+=data[i];
             ave /= data.Count;
             return (int)ave;
- 
         }
 
 

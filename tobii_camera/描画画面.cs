@@ -19,6 +19,8 @@ namespace tobii_camera
 
         int dis_height;//ディスプレイの高さ
         int dis_width;//ディスプレイの幅
+        int pos_max;//眼球位置x座標の最大値
+        int diff_in;//初期の左右眼球位置の差
 
         private Timer timer;
 
@@ -28,6 +30,9 @@ namespace tobii_camera
             InitializeComponent();
             dis_height= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             dis_width=System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            pos_max = Tobii.pos_max;
+            while (Tobii.眼球位置[0] == 0 || Tobii.眼球位置[1] == 100) { }//両目とれるまでここにとどまる
+            diff_in = Tobii.眼球位置[1]-Tobii.眼球位置[0];
 
             pictureBoxIpl1.Width = dis_width;
             pictureBoxIpl1.Height = dis_height;
@@ -58,9 +63,17 @@ namespace tobii_camera
         {
             var sample = background.Clone();
 
-            視点描画(ref sample);
-            顔の向き描画(ref sample);
-            debug描画(ref sample);
+            if (Tobii.眼球位置[0] == 0 && Tobii.眼球位置[1] == pos_max) 
+            {
+                //両目検出できなかった時の処理
+            }
+            else
+            {
+                視点描画(ref sample);
+                顔の向き描画(ref sample);
+                debug描画(ref sample);
+            }
+            
             
 
             pictureBoxIpl1.RefreshIplImage(sample);
@@ -89,35 +102,52 @@ namespace tobii_camera
             mask.Zero();
             Cv.Rectangle(mask, rect, new CvScalar(255, 255, 255), -1);
             mask.Not(mask);
+            src.Not(src);//枠外を黒くしたいので
             Cv.Add(src, mask, src);
-
+            src.Not(src);
+            Cv.Rectangle(src, rect, new CvScalar(255, 255, 255), 1);//枠を表示
             mask.Dispose();
         }
         void 顔の向き描画(ref IplImage src)
         {
-            // ||の表示
-            double[] eyes = Tobii.眼球位置;
-            double center=(eyes[0]+eyes[1])/2;
+            // | の表示
+            int[] eyes = Tobii.眼球位置;
             int line_pos = dis_width/2;
 
-            if (eyes[0] == 0 && eyes[1] == 1000) { } //両目が検知できなかったら
-            else if (eyes[0] > 510) line_pos = dis_width;
-            else if (eyes[1] < 490) line_pos=0;
-            else if (eyes[0] > 490) line_pos = dis_width * 5 / 6;
-            else if (eyes[1] < 510) line_pos = dis_width / 6;
-            else if (eyes[0] > 430) line_pos = dis_width * 4 / 6;
-            else if (eyes[1] < 530) line_pos = dis_width * 2 / 6;
-            else line_pos = Width / 2;
+            //2つの眼球距離から推定．最初の姿勢から前後に身体を揺らすとダメ
+            if (eyes[0] != 0 && eyes[1] != pos_max)//両目の位置が検出できている時
+            {
+                const double min_ratio = 0.906;//sin50°/(2sin25°) 眼球間角度は50°,片目が中心に来る時を最大と過程
+                double ratio = (double)(Tobii.眼球位置[1] - Tobii.眼球位置[0]) / (double)diff_in;
+                double pos_ratio = (1 - ratio) / (1 - min_ratio);
+                if (pos_ratio > 1) pos_ratio = 1;
+
+                if ((eyes[1] + eyes[0]) / 2 > pos_max / 2)//右を向いている
+                {
+                    line_pos += (int)(pos_ratio * (double)dis_width / 2);
+                }
+                else//左を向いている 
+                {
+                    line_pos -= (int)(pos_ratio * (double)dis_width / 2);
+                }
+
+                if (pos_ratio < 0.2) line_pos = dis_width / 2;
+            }
+            else
+            {
+                if (eyes[0] == 0) line_pos = 0;
+                else line_pos = dis_width;
+            }
 
             Cv.Line(src, new CvPoint(line_pos, 0), new CvPoint(line_pos, dis_height), new CvScalar(0, 255, 0), 5);
         }
         void debug描画(ref IplImage src)
         {
             string[] debug=Tobii.debug.Split('\n');
-            CvFont フォント = new CvFont(FontFace.HersheyComplex, 0.5, 0.5);
-            Cv.PutText(src, debug[0], new CvPoint(10, 20), フォント, new CvColor(0, 0, 255));
-            Cv.PutText(src, debug[1], new CvPoint(10, 40), フォント, new CvColor(0, 0, 255));
-            Cv.PutText(src, debug[2], new CvPoint(10, 60), フォント, new CvColor(0, 0, 255));
+            CvFont フォント = new CvFont(FontFace.HersheyComplex, 0.5, 0.5);        
+            Cv.PutText(src, debug[0], new CvPoint(10, 20), フォント, new CvColor(255, 255, 255));
+            Cv.PutText(src, debug[1], new CvPoint(10, 40), フォント, new CvColor(255, 255, 255));
+            Cv.PutText(src, debug[2], new CvPoint(10, 60), フォント, new CvColor(255, 255, 255));
         }
     }
 }

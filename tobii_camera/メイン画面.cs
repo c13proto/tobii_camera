@@ -56,7 +56,6 @@ namespace tobii_camera
             window[0] = int.Parse(textBox_window_x.Text);
             window[1] = int.Parse(textBox_window_y.Text);
             fps = int.Parse(textBox_fps.Text);
-
             描画画面.Instance.Show();
         }
 
