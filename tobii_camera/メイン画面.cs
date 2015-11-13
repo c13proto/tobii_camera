@@ -16,6 +16,7 @@ namespace tobii_camera
         public static int[] window=new int[2];
         public static int fps;
         public static IplImage background;
+        public static int average_num;
 
         public メイン画面()
         {
@@ -56,6 +57,7 @@ namespace tobii_camera
             window[0] = int.Parse(textBox_window_x.Text);
             window[1] = int.Parse(textBox_window_y.Text);
             fps = int.Parse(textBox_fps.Text);
+            average_num = int.Parse(textBox_average.Text);
             描画画面.Instance.Show();
         }
 

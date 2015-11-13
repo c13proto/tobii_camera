@@ -16,6 +16,7 @@ namespace tobii_camera
         private Timer timer;
         CvCapture CAPTURE;
         bool REFRESH=true;
+        public static IplImage camera;
 
         public Camera()
         {
@@ -51,7 +52,11 @@ namespace tobii_camera
             if(REFRESH)
             {
                 var frame = Cv.QueryFrame(CAPTURE);
-                if (frame != null) pictureBoxIpl1.RefreshIplImage(frame);
+                if (frame != null)
+                {
+                    pictureBoxIpl1.RefreshIplImage(frame);
+                    camera = frame.Clone();
+                }
                 else System.Diagnostics.Debug.WriteLine("frame=null"); 
                 Cv.ReleaseImage(frame);
             }
@@ -60,6 +65,8 @@ namespace tobii_camera
         private void Click_Stop(object sender, EventArgs e)
         {
             REFRESH = false;
+            Cv.ReleaseImage(camera);
+            camera = null;
             timer.Stop();
         }
 
@@ -71,6 +78,14 @@ namespace tobii_camera
         void FPS設定(int fps)
         {
             CAPTURE.Fps = fps;
+        }
+
+        private void Camera_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            REFRESH = false;
+            timer.Stop();
+            Cv.ReleaseImage(camera);
+            camera = null;
         }
 
     }

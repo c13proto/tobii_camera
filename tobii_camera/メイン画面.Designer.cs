@@ -38,6 +38,8 @@
             this.textBox_window_x = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button_back = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox_average = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button_Camera
@@ -62,7 +64,7 @@
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(11, 195);
+            this.button_start.Location = new System.Drawing.Point(11, 232);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(75, 23);
             this.button_start.TabIndex = 2;
@@ -132,12 +134,31 @@
             this.button_back.UseVisualStyleBackColor = true;
             this.button_back.Click += new System.EventHandler(this.Click_back);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 192);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "移動平均";
+            // 
+            // textBox_average
+            // 
+            this.textBox_average.Location = new System.Drawing.Point(61, 207);
+            this.textBox_average.Name = "textBox_average";
+            this.textBox_average.Size = new System.Drawing.Size(25, 19);
+            this.textBox_average.TabIndex = 11;
+            this.textBox_average.Text = "5";
+            // 
             // メイン画面
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(316, 267);
+            this.Controls.Add(this.textBox_average);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.button_back);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox_window_x);
@@ -167,6 +188,8 @@
         private System.Windows.Forms.TextBox textBox_window_x;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button_back;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox_average;
     }
 }
 

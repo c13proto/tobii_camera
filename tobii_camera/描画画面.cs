@@ -15,6 +15,7 @@ namespace tobii_camera
     {
         private static 描画画面 _instance;
         IplImage background;
+        List<CvPoint> stack_points=new List<CvPoint>();
         CvSize window_size;
 
         int dis_height;//ディスプレイの高さ
@@ -23,8 +24,8 @@ namespace tobii_camera
         int diff_in;//初期の左右眼球位置の差
 
         private Timer timer;
-
-
+        int vertical_line;//顔の向きを表している　|　の表示座標
+        int vertical_counter;
         public 描画画面()
         {
             InitializeComponent();
@@ -62,6 +63,7 @@ namespace tobii_camera
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
             var sample = background.Clone();
+            if (Camera.camera!=null) Camera.camera.Resize(sample);
 
             if (Tobii.眼球位置[0] == 0 && Tobii.眼球位置[1] == pos_max) 
             {
@@ -69,6 +71,7 @@ namespace tobii_camera
             }
             else
             {
+                stack_CvPoint(ref stack_points);
                 視点描画(ref sample);
                 顔の向き描画(ref sample);
                 debug描画(ref sample);
@@ -83,13 +86,25 @@ namespace tobii_camera
         void 視点描画(ref IplImage src)
         {
             //視点位置と□
+            var ave_point = ave_CvPoints(stack_points);
             int point_x, point_y;
-            point_x = Tobii.視点座標.X - window_size.Width / 2;
-            point_y = Tobii.視点座標.Y - window_size.Height / 2;
+            point_x = ave_point.X - window_size.Width / 2;
+            point_y = ave_point.Y - window_size.Height / 2;
             if (point_x < 0) point_x = 0;
             if (point_y < 0) point_y = 0;
             if (point_x > dis_width - window_size.Width) point_x = dis_width - window_size.Width;
             if (point_y > dis_height - window_size.Height) point_y = dis_height - window_size.Height;
+            if (vertical_line < dis_width / 8 || vertical_line > dis_width * 7 / 8)
+            {
+                vertical_counter++;
+                if (vertical_counter > 5)
+                {
+                    if (vertical_line < dis_width / 2) point_x = 0;
+                    else point_x = dis_width-window_size.Width;
+                }
+            }
+            else vertical_counter = 0;
+
             CvPoint point1 = new CvPoint(point_x, point_y);
             CvPoint point2 = new CvPoint(point_x + window_size.Width, point_y + window_size.Height);
             //Cv.Rectangle(src, point1, point2, new CvScalar(0, 0, 255), 3);
@@ -107,6 +122,29 @@ namespace tobii_camera
             src.Not(src);
             Cv.Rectangle(src, rect, new CvScalar(255, 255, 255), 1);//枠を表示
             mask.Dispose();
+        }
+        void stack_CvPoint(ref List<CvPoint> points)
+        {
+            if (points.Count < メイン画面.average_num) stack_points.Add(new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y));//最終項に追加される
+            else
+            {
+                points.RemoveAt(0);//先頭を削除
+                points.Add(new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y));
+            }
+
+        }
+        CvPoint ave_CvPoints(List<CvPoint> points)
+        {
+            CvPoint ave=new CvPoint(0,0);
+            for (int i = 0; i < points.Count; i++)
+            {
+                ave.X += points[i].X;
+                ave.Y += points[i].Y;
+            }
+            ave.X /= points.Count;
+            ave.Y /= points.Count;
+
+            return ave;
         }
         void 顔の向き描画(ref IplImage src)
         {
@@ -139,6 +177,7 @@ namespace tobii_camera
                 else line_pos = dis_width;
             }
 
+            vertical_line = line_pos;
             Cv.Line(src, new CvPoint(line_pos, 0), new CvPoint(line_pos, dis_height), new CvScalar(0, 255, 0), 5);
         }
         void debug描画(ref IplImage src)

@@ -126,6 +126,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Camera";
             this.Text = "Camera";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Camera_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
