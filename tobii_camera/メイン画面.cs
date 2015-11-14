@@ -25,7 +25,7 @@ namespace tobii_camera
             background = Cv.CreateImage(new CvSize(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height), BitDepth.U8, 3);
             background.Zero();
 
-            Camera.Instance.Show();
+            //Camera.Instance.Show();
             Tobii.Instance.Show();
             timer = new Timer();
             timer.Tick += new EventHandler(timer_Tick);
