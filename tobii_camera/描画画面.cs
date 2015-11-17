@@ -17,11 +17,13 @@ namespace tobii_camera
         IplImage background;
         List<CvPoint> stack_points=new List<CvPoint>();
         CvSize window_size;
+        CvPoint point_old;
+        int 許容半径;
 
         int dis_height;//ディスプレイの高さ
         int dis_width;//ディスプレイの幅
-        int pos_max;//眼球位置x座標の最大値
-        int diff_in;//初期の左右眼球位置の差
+        int pos_max;// 眼球位置_Xx座標の最大値
+        int diff_in;//初期の左右 眼球位置_Xの差
 
         private Timer timer;
         int vertical_line;//顔の向きを表している　|　の表示座標
@@ -32,8 +34,8 @@ namespace tobii_camera
             dis_height= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             dis_width=System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             pos_max = Tobii.pos_max;
-            while (Tobii.眼球位置[0] == 0 || Tobii.眼球位置[1] == 100) { }//両目とれるまでここにとどまる
-            diff_in = Tobii.眼球位置[1]-Tobii.眼球位置[0];
+            while (Tobii. 眼球位置_L[0] == 0 || Tobii. 眼球位置_R[0] == 100) { }//両目とれるまでここにとどまる
+            diff_in = Tobii. 眼球位置_R[0]-Tobii. 眼球位置_L[0];
 
             pictureBoxIpl1.Width = dis_width;
             pictureBoxIpl1.Height = dis_height;
@@ -41,6 +43,8 @@ namespace tobii_camera
             background=メイン画面.background;
             pictureBoxIpl1.ImageIpl = background;
             window_size = new CvSize(メイン画面.window[0], メイン画面.window[1]);
+            point_old = new CvPoint(window_size.Width / 2, window_size.Height / 2);
+            許容半径 = メイン画面.radius;
 
             timer = new Timer();
             timer.Tick += new EventHandler(timer_Tick);
@@ -65,7 +69,7 @@ namespace tobii_camera
             var sample = background.Clone();
             if (Camera.camera!=null) Camera.camera.Resize(sample);
 
-            if (Tobii.眼球位置[0] == 0 && Tobii.眼球位置[1] == pos_max) 
+            if (Tobii. 眼球位置_L[0] == 0 && Tobii. 眼球位置_R[0] == pos_max) 
             {
                 //両目検出できなかった時の処理
             }
@@ -86,30 +90,46 @@ namespace tobii_camera
         void 視点描画(ref IplImage src)
         {
             //視点位置と□
-            var ave_point = ave_CvPoints(stack_points);
-            int point_x, point_y;
-            point_x = ave_point.X - window_size.Width / 2;
-            point_y = ave_point.Y - window_size.Height / 2;
-            if (point_x < 0) point_x = 0;
-            if (point_y < 0) point_y = 0;
-            if (point_x > dis_width - window_size.Width) point_x = dis_width - window_size.Width;
-            if (point_y > dis_height - window_size.Height) point_y = dis_height - window_size.Height;
+            var point = ave_CvPoints(stack_points);//枠の中心座標
+            Cv.Circle(src, point, 3, new CvScalar(255, 255, 255));
+            枠の中心座標計算(ref point, 許容半径);
+            Cv.Circle(src, point, 許容半径, new CvScalar(255, 255, 255));
+
             if (vertical_line < dis_width / 8 || vertical_line > dis_width * 7 / 8)
             {
                 vertical_counter++;
                 if (vertical_counter > 5)
                 {
-                    if (vertical_line < dis_width / 2) point_x = 0;
-                    else point_x = dis_width-window_size.Width;
+                    if (vertical_line < dis_width / 2) point.X = window_size.Width / 2;
+                    else point.X = dis_width-window_size.Width/2;
                 }
             }
             else vertical_counter = 0;
 
-            CvPoint point1 = new CvPoint(point_x, point_y);
-            CvPoint point2 = new CvPoint(point_x + window_size.Width, point_y + window_size.Height);
-            //Cv.Rectangle(src, point1, point2, new CvScalar(0, 0, 255), 3);
-            枠外を塗りつぶす(ref src, new CvRect(point1, window_size));
-            Cv.Circle(src, new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y), 3, new CvScalar(255, 255, 255));
+            枠外を塗りつぶす(ref src, new CvRect(new CvPoint(point.X-window_size.Width/2,point.Y-window_size.Height/2), window_size));
+
+            point_old = point;
+        }
+        void 枠の中心座標計算(ref CvPoint point,int r)
+        {
+            double distance=Math.Sqrt(Math.Pow(point.X - point_old.X, 2) + Math.Pow(point.Y - point_old.Y, 2));
+
+            if (Math.Abs(point.X - point_old.X) > window_size.Width / 2 || Math.Abs(point.Y - point_old.Y) > window_size.Height / 2)
+            {//枠外だったらスキップ 
+            }
+            else if (distance > r)
+            {
+                double ratio = r / distance;
+                point.X += (int)((point_old.X - point.X) * ratio);
+                point.Y += (int)((point_old.Y - point.Y) * ratio);
+            }
+            else point = point_old;
+
+            if (point.X < window_size.Width / 2) point.X = window_size.Width / 2;
+            if (point.Y < window_size.Height / 2) point.Y = window_size.Height / 2;
+            if (point.X > dis_width - window_size.Width / 2) point.X = dis_width - window_size.Width / 2;
+            if (point.Y > dis_height - window_size.Height) point.Y = dis_height - window_size.Height / 2;
+ 
         }
         void 枠外を塗りつぶす(ref IplImage src,CvRect rect)
         {
@@ -125,11 +145,11 @@ namespace tobii_camera
         }
         void stack_CvPoint(ref List<CvPoint> points)
         {
-            if (points.Count < メイン画面.average_num) stack_points.Add(new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y));//最終項に追加される
+            if (points.Count < メイン画面.average_num) stack_points.Add(new CvPoint(Tobii.視点座標[0], Tobii.視点座標[1]));//最終項に追加される
             else
             {
                 points.RemoveAt(0);//先頭を削除
-                points.Add(new CvPoint(Tobii.視点座標.X, Tobii.視点座標.Y));
+                points.Add(new CvPoint(Tobii.視点座標[0], Tobii.視点座標[1]));
             }
 
         }
@@ -149,27 +169,27 @@ namespace tobii_camera
         void 顔の向き描画(ref IplImage src)
         {
             // | の表示
-            int[] eyes = Tobii.眼球位置;
+            int[] eyes = new int[] { Tobii.眼球位置_L[0], Tobii.眼球位置_R[0] };
             int line_pos = dis_width/2;
 
             //2つの眼球距離から推定．最初の姿勢から前後に身体を揺らすとダメ
             if (eyes[0] != 0 && eyes[1] != pos_max)//両目の位置が検出できている時
             {
                 const double min_ratio = 0.906;//sin50°/(2sin25°) 眼球間角度は50°,片目が中心に来る時を最大と過程
-                double ratio = (double)(Tobii.眼球位置[1] - Tobii.眼球位置[0]) / (double)diff_in;
-                double pos_ratio = (1 - ratio) / (1 - min_ratio);
-                if (pos_ratio > 1) pos_ratio = 1;
+                double ratio = (double)(Tobii. 眼球位置_R[0] - Tobii. 眼球位置_L[0]) / (double)diff_in;
+                double POS_Ratio = (1 - ratio) / (1 - min_ratio);
+                if (POS_Ratio > 1) POS_Ratio = 1;
 
                 if ((eyes[1] + eyes[0]) / 2 > pos_max / 2)//右を向いている
                 {
-                    line_pos += (int)(pos_ratio * (double)dis_width / 2);
+                    line_pos += (int)(POS_Ratio * (double)dis_width / 2);
                 }
                 else//左を向いている 
                 {
-                    line_pos -= (int)(pos_ratio * (double)dis_width / 2);
+                    line_pos -= (int)(POS_Ratio * (double)dis_width / 2);
                 }
 
-                if (pos_ratio < 0.2) line_pos = dis_width / 2;
+                if (POS_Ratio < 0.2) line_pos = dis_width / 2;
             }
             else
             {

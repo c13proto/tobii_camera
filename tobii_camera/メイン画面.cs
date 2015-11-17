@@ -17,6 +17,7 @@ namespace tobii_camera
         public static int fps;
         public static IplImage background;
         public static int average_num;
+        public static int radius;
 
         public メイン画面()
         {
@@ -58,6 +59,7 @@ namespace tobii_camera
             window[1] = int.Parse(textBox_window_y.Text);
             fps = int.Parse(textBox_fps.Text);
             average_num = int.Parse(textBox_average.Text);
+            radius = int.Parse(textBox_radius.Text);
             描画画面.Instance.Show();
         }
 

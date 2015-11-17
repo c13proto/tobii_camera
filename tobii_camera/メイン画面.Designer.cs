@@ -40,6 +40,8 @@
             this.button_back = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox_average = new System.Windows.Forms.TextBox();
+            this.textBox_radius = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button_Camera
@@ -101,7 +103,7 @@
             // 
             // textBox_window_y
             // 
-            this.textBox_window_y.Location = new System.Drawing.Point(61, 170);
+            this.textBox_window_y.Location = new System.Drawing.Point(57, 164);
             this.textBox_window_y.Name = "textBox_window_y";
             this.textBox_window_y.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_y.TabIndex = 6;
@@ -109,7 +111,7 @@
             // 
             // textBox_window_x
             // 
-            this.textBox_window_x.Location = new System.Drawing.Point(30, 170);
+            this.textBox_window_x.Location = new System.Drawing.Point(26, 164);
             this.textBox_window_x.Name = "textBox_window_x";
             this.textBox_window_x.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_x.TabIndex = 7;
@@ -118,7 +120,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 155);
+            this.label2.Location = new System.Drawing.Point(9, 149);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 12);
             this.label2.TabIndex = 8;
@@ -137,7 +139,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 192);
+            this.label3.Location = new System.Drawing.Point(9, 192);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 10;
@@ -145,11 +147,28 @@
             // 
             // textBox_average
             // 
-            this.textBox_average.Location = new System.Drawing.Point(61, 207);
+            this.textBox_average.Location = new System.Drawing.Point(61, 189);
             this.textBox_average.Name = "textBox_average";
             this.textBox_average.Size = new System.Drawing.Size(25, 19);
             this.textBox_average.TabIndex = 11;
             this.textBox_average.Text = "5";
+            // 
+            // textBox_radius
+            // 
+            this.textBox_radius.Location = new System.Drawing.Point(61, 208);
+            this.textBox_radius.Name = "textBox_radius";
+            this.textBox_radius.Size = new System.Drawing.Size(25, 19);
+            this.textBox_radius.TabIndex = 13;
+            this.textBox_radius.Text = "50";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 211);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "許容半径";
             // 
             // メイン画面
             // 
@@ -157,6 +176,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(316, 267);
+            this.Controls.Add(this.textBox_radius);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.textBox_average);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button_back);
@@ -190,6 +211,8 @@
         private System.Windows.Forms.Button button_back;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox_average;
+        private System.Windows.Forms.TextBox textBox_radius;
+        private System.Windows.Forms.Label label4;
     }
 }
 
