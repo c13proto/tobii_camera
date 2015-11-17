@@ -24,10 +24,13 @@ namespace tobii_camera
         int dis_width;//ディスプレイの幅
         int pos_max;// 眼球位置_Xx座標の最大値
         int diff_in;//初期の左右 眼球位置_Xの差
+        int posY_in;//初期の目の高さ
 
         private Timer timer;
         int vertical_line;//顔の向きを表している　|　の表示座標
         int vertical_counter;
+        int horizontal_line;
+        int horizontal_counter;
         public 描画画面()
         {
             InitializeComponent();
@@ -36,6 +39,7 @@ namespace tobii_camera
             pos_max = Tobii.pos_max;
             while (Tobii. 眼球位置_L[0] == 0 || Tobii. 眼球位置_R[0] == 100) { }//両目とれるまでここにとどまる
             diff_in = Tobii. 眼球位置_R[0]-Tobii. 眼球位置_L[0];
+            posY_in = (Tobii.眼球位置_L[1] + Tobii.眼球位置_R[1] )/ 2;
 
             pictureBoxIpl1.Width = dis_width;
             pictureBoxIpl1.Height = dis_height;
@@ -94,21 +98,38 @@ namespace tobii_camera
             Cv.Circle(src, point, 3, new CvScalar(255, 255, 255));
             枠の中心座標計算(ref point, 許容半径);
             Cv.Circle(src, point, 許容半径, new CvScalar(255, 255, 255));
+            首の動きで座標操作(ref point);
 
+
+            枠外を塗りつぶす(ref src, new CvRect(new CvPoint(point.X-window_size.Width/2,point.Y-window_size.Height/2), window_size));
+
+            point_old = point;
+        }
+        void 首の動きで座標操作(ref CvPoint point)
+        {
+            //垂直線
             if (vertical_line < dis_width / 8 || vertical_line > dis_width * 7 / 8)
             {
                 vertical_counter++;
                 if (vertical_counter > 5)
                 {
                     if (vertical_line < dis_width / 2) point.X = window_size.Width / 2;
-                    else point.X = dis_width-window_size.Width/2;
+                    else point.X = dis_width - window_size.Width / 2;
                 }
             }
             else vertical_counter = 0;
 
-            枠外を塗りつぶす(ref src, new CvRect(new CvPoint(point.X-window_size.Width/2,point.Y-window_size.Height/2), window_size));
-
-            point_old = point;
+            //水平線
+            if (horizontal_line < dis_height / 8 || horizontal_line > dis_height * 7 / 8)
+            {
+                horizontal_counter++;
+                if (horizontal_counter > 5)
+                {
+                    if (horizontal_line < dis_height / 2) point.Y = window_size.Height / 2;
+                    else point.Y = dis_height - window_size.Height / 2;
+                }
+            }
+            else horizontal_counter = 0;
         }
         void 枠の中心座標計算(ref CvPoint point,int r)
         {
@@ -168,15 +189,35 @@ namespace tobii_camera
         }
         void 顔の向き描画(ref IplImage src)
         {
+            垂直線描画(ref src);
+            水平線描画(ref src);
+
+        }
+        void 水平線描画(ref IplImage src)
+        {
+            int[] eyes = new int[] { Tobii.眼球位置_L[1], Tobii.眼球位置_R[1] };
+            int line_pos = dis_height / 2;
+            int diff = posY_in-(eyes[0] + eyes[1]) / 2;
+            if (eyes[0] == 0) diff = posY_in- eyes[1] ;
+            if (eyes[1] == pos_max) diff = posY_in-eyes[0];
+
+            line_pos = dis_height/2+dis_height/2*diff / 20;
+            if (line_pos > dis_height) line_pos = dis_height;
+            if (line_pos < 0) line_pos = 0;
+            Cv.Line(src, new CvPoint(0, line_pos), new CvPoint(dis_width, line_pos), new CvScalar(0, 255, 0), 5);
+            horizontal_line = line_pos;
+        }
+        void 垂直線描画(ref IplImage src)
+        {
             // | の表示
             int[] eyes = new int[] { Tobii.眼球位置_L[0], Tobii.眼球位置_R[0] };
-            int line_pos = dis_width/2;
+            int line_pos = dis_width / 2;
 
             //2つの眼球距離から推定．最初の姿勢から前後に身体を揺らすとダメ
             if (eyes[0] != 0 && eyes[1] != pos_max)//両目の位置が検出できている時
             {
                 const double min_ratio = 0.906;//sin50°/(2sin25°) 眼球間角度は50°,片目が中心に来る時を最大と過程
-                double ratio = (double)(Tobii. 眼球位置_R[0] - Tobii. 眼球位置_L[0]) / (double)diff_in;
+                double ratio = (double)(Tobii.眼球位置_R[0] - Tobii.眼球位置_L[0]) / (double)diff_in;
                 double POS_Ratio = (1 - ratio) / (1 - min_ratio);
                 if (POS_Ratio > 1) POS_Ratio = 1;
 
