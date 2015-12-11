@@ -23,7 +23,7 @@ namespace tobii_camera
 
         //IPカメラ用変数
         byte[] CAPTURE_IP;
-        string URL = "http://192.168.2.1/jpg/image.jpg";
+        string URL = "http://192.168.2.1/?action=snapshot";
 
         private Timer timer;
         public static IplImage camera;
@@ -69,18 +69,14 @@ namespace tobii_camera
                     else System.Diagnostics.Debug.WriteLine("frame=null");
                     Cv.ReleaseImage(frame);
             }
-            else//webカメラの処理
+            else//wifiカメラの処理
             {
-                int read, total = 0;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
-                WebResponse resp = request.GetResponse();
-                Stream stream = resp.GetResponseStream();
-                while ((read = stream.Read(CAPTURE_IP, total, 1000)) != 0) total += read;
-                Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(CAPTURE_IP, 0, total));
-
-                camera=BitmapConverter.ToIplImage(bmp);
+                WebClient wc = new WebClient();
+                Stream stream = wc.OpenRead(URL);
+                Bitmap bmp = new Bitmap(stream);
+                stream.Close();
+                camera = BitmapConverter.ToIplImage(bmp);
                 pictureBoxIpl1.RefreshIplImage(camera);
-
                 bmp.Dispose();
  
             }
@@ -115,8 +111,10 @@ namespace tobii_camera
             IPcamera = true;            
             CAPTURE_IP = new byte[int.Parse(textBox_resX.Text) * int.Parse(textBox_resY.Text)];
 
+
             timer.Interval = (int)(1000 / int.Parse(textBox_FPS.Text));
             timer.Start();
+
         }
 
     }
