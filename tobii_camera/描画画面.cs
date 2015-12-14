@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenCvSharp;
+using System.Timers;
 
 namespace tobii_camera
 {
@@ -15,6 +16,7 @@ namespace tobii_camera
     {
         private static 描画画面 _instance;
         IplImage background;
+        IplImage frame;
         List<CvPoint> stack_points=new List<CvPoint>();
         CvSize window_size;
         CvPoint point_old;
@@ -26,7 +28,9 @@ namespace tobii_camera
         int diff_in;//初期の左右 眼球位置_Xの差
         int posY_in;//初期の目の高さ
 
-        private Timer timer;
+        private System.Timers.Timer timer_back;
+        private System.Windows.Forms.Timer timer_form;
+        
         int vertical_line;//顔の向きを表している　|　の表示座標
         int vertical_counter;
         int horizontal_line;
@@ -34,6 +38,7 @@ namespace tobii_camera
         public 描画画面()
         {
             InitializeComponent();
+
             dis_height= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             dis_width=System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             pos_max = Tobii.pos_max;
@@ -43,6 +48,7 @@ namespace tobii_camera
 
             pictureBoxIpl1.Width = dis_width;
             pictureBoxIpl1.Height = dis_height;
+            frame = Cv.CreateImage(new CvSize(dis_width, dis_height), BitDepth.U8, 3);
             background = Cv.CreateImage(new CvSize(dis_width, dis_height), BitDepth.U8, 3);
             background=メイン画面.background;
             pictureBoxIpl1.ImageIpl = background;
@@ -50,10 +56,15 @@ namespace tobii_camera
             point_old = new CvPoint(window_size.Width / 2, window_size.Height / 2);
             許容半径 = メイン画面.radius;
 
-            timer = new Timer();
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = (int)(1000 / メイン画面.fps);
-            timer.Start();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(form_ctrl);
+            timer_form.Interval = メイン画面.描画周期;
+            timer_form.Start();
+
+            timer_back = new System.Timers.Timer();
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
+            timer_back.Interval = メイン画面.計算周期;
+            timer_back.Start();
 
         }
 
@@ -68,12 +79,16 @@ namespace tobii_camera
                 return _instance;
             }
         }
-        private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
+        private void form_ctrl(object sender, EventArgs e)//タイマ割り込みで行う処理
+        {
+            pictureBoxIpl1.RefreshIplImage(frame);
+        }
+        void back_ctrl(object sender, ElapsedEventArgs e)
         {
             var sample = background.Clone();
-            if (Camera.camera!=null) Camera.camera.Resize(sample);
+            if (Camera.camera != null) Camera.camera.Resize(sample);
 
-            if (Tobii. 眼球位置_L[0] == 0 && Tobii. 眼球位置_R[0] == pos_max) 
+            if (Tobii.眼球位置_L[0] == 0 && Tobii.眼球位置_R[0] == pos_max)
             {
                 //両目検出できなかった時の処理
             }
@@ -84,20 +99,17 @@ namespace tobii_camera
                 顔の向き描画(ref sample);
                 debug描画(ref sample);
             }
-            
-            
-
-            pictureBoxIpl1.RefreshIplImage(sample);
+            frame = sample.Clone();
             sample.Dispose();
         }
-
+        
         void 視点描画(ref IplImage src)
         {
             //視点位置と□
             var point = ave_CvPoints(stack_points);//枠の中心座標
-            Cv.Circle(src, point, 3, new CvScalar(255, 255, 255));
+            if(メイン画面.視点を表示)Cv.Circle(src, point, 3, new CvScalar(255, 255, 255));
             枠の中心座標計算(ref point, 許容半径);
-            Cv.Circle(src, point, 許容半径, new CvScalar(255, 255, 255));
+            if(メイン画面.円を表示)Cv.Circle(src, point, 許容半径, new CvScalar(255, 255, 255));
             首の動きで座標操作(ref point);
 
 
@@ -204,7 +216,7 @@ namespace tobii_camera
             line_pos = dis_height/2+dis_height/2*diff / 20;
             if (line_pos > dis_height) line_pos = dis_height;
             if (line_pos < 0) line_pos = 0;
-            Cv.Line(src, new CvPoint(0, line_pos), new CvPoint(dis_width, line_pos), new CvScalar(0, 255, 0), 5);
+            if(メイン画面.緑線を表示)Cv.Line(src, new CvPoint(0, line_pos), new CvPoint(dis_width, line_pos), new CvScalar(0, 255, 0), 5);
             horizontal_line = line_pos;
         }
         void 垂直線描画(ref IplImage src)
@@ -239,7 +251,7 @@ namespace tobii_camera
             }
 
             vertical_line = line_pos;
-            Cv.Line(src, new CvPoint(line_pos, 0), new CvPoint(line_pos, dis_height), new CvScalar(0, 255, 0), 5);
+            if (メイン画面.緑線を表示) Cv.Line(src, new CvPoint(line_pos, 0), new CvPoint(line_pos, dis_height), new CvScalar(0, 255, 0), 5);
         }
         void debug描画(ref IplImage src)
         {

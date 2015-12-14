@@ -31,11 +31,13 @@
             this.button_start = new System.Windows.Forms.Button();
             this.button_stop = new System.Windows.Forms.Button();
             this.label_point = new System.Windows.Forms.Label();
-            this.textBox_interval = new System.Windows.Forms.TextBox();
+            this.textBox_描画周期 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label_L = new System.Windows.Forms.Label();
             this.label_R = new System.Windows.Forms.Label();
             this.checkBox_mouse = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox_計算周期 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button_start
@@ -51,9 +53,9 @@
             // button_stop
             // 
             this.button_stop.Font = new System.Drawing.Font("MS UI Gothic", 120F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button_stop.Location = new System.Drawing.Point(12, 64);
+            this.button_stop.Location = new System.Drawing.Point(12, 108);
             this.button_stop.Name = "button_stop";
-            this.button_stop.Size = new System.Drawing.Size(733, 479);
+            this.button_stop.Size = new System.Drawing.Size(733, 435);
             this.button_stop.TabIndex = 1;
             this.button_stop.Text = "stop";
             this.button_stop.UseVisualStyleBackColor = true;
@@ -63,28 +65,28 @@
             // 
             this.label_point.AutoSize = true;
             this.label_point.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_point.Location = new System.Drawing.Point(279, 28);
+            this.label_point.Location = new System.Drawing.Point(304, 55);
             this.label_point.Name = "label_point";
             this.label_point.Size = new System.Drawing.Size(128, 27);
             this.label_point.TabIndex = 2;
             this.label_point.Text = "point=(x,y)";
             // 
-            // textBox_interval
+            // textBox_描画周期
             // 
-            this.textBox_interval.Location = new System.Drawing.Point(379, 12);
-            this.textBox_interval.Name = "textBox_interval";
-            this.textBox_interval.Size = new System.Drawing.Size(28, 19);
-            this.textBox_interval.TabIndex = 3;
-            this.textBox_interval.Text = "33";
+            this.textBox_描画周期.Location = new System.Drawing.Point(269, 6);
+            this.textBox_描画周期.Name = "textBox_描画周期";
+            this.textBox_描画周期.Size = new System.Drawing.Size(28, 19);
+            this.textBox_描画周期.TabIndex = 3;
+            this.textBox_描画周期.Text = "50";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(278, 15);
+            this.label1.Location = new System.Drawing.Point(168, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 12);
+            this.label1.Size = new System.Drawing.Size(76, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "割り込み周期(ms)";
+            this.label1.Text = "描画周期(ms)";
             // 
             // label_L
             // 
@@ -109,12 +111,29 @@
             // checkBox_mouse
             // 
             this.checkBox_mouse.AutoSize = true;
-            this.checkBox_mouse.Location = new System.Drawing.Point(170, 38);
+            this.checkBox_mouse.Location = new System.Drawing.Point(170, 55);
             this.checkBox_mouse.Name = "checkBox_mouse";
             this.checkBox_mouse.Size = new System.Drawing.Size(88, 16);
             this.checkBox_mouse.TabIndex = 8;
             this.checkBox_mouse.Text = "mouse_move";
             this.checkBox_mouse.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(168, 28);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(76, 12);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "計算周期(ms)";
+            // 
+            // textBox_計算周期
+            // 
+            this.textBox_計算周期.Location = new System.Drawing.Point(269, 25);
+            this.textBox_計算周期.Name = "textBox_計算周期";
+            this.textBox_計算周期.Size = new System.Drawing.Size(28, 19);
+            this.textBox_計算周期.TabIndex = 9;
+            this.textBox_計算周期.Text = "50";
             // 
             // Tobii
             // 
@@ -122,11 +141,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(754, 556);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBox_計算周期);
             this.Controls.Add(this.checkBox_mouse);
             this.Controls.Add(this.label_R);
             this.Controls.Add(this.label_L);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox_interval);
+            this.Controls.Add(this.textBox_描画周期);
             this.Controls.Add(this.label_point);
             this.Controls.Add(this.button_stop);
             this.Controls.Add(this.button_start);
@@ -143,11 +164,13 @@
         private System.Windows.Forms.Button button_start;
         private System.Windows.Forms.Button button_stop;
         private System.Windows.Forms.Label label_point;
-        private System.Windows.Forms.TextBox textBox_interval;
+        private System.Windows.Forms.TextBox textBox_描画周期;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_L;
         private System.Windows.Forms.Label label_R;
         private System.Windows.Forms.CheckBox checkBox_mouse;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox_計算周期;
 
     }
 }

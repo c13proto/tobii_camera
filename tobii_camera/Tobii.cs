@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Tobii.EyeX.Client;
 using Tobii.EyeX.Framework;
 using EyeXFramework;
+using System.Timers;
 
 namespace tobii_camera
 {
@@ -16,7 +17,10 @@ namespace tobii_camera
     public partial class Tobii : Form
     {
         private static Tobii _instance;
-        private Timer timer;
+
+        private System.Timers.Timer timer_back;
+        private System.Windows.Forms.Timer timer_form;
+
         EyeXHost eyexhost = new EyeXHost();
         GazePointDataStream lightlyFilteredGazeDataStream;
         EyePositionDataStream PosDataStream;
@@ -39,8 +43,10 @@ namespace tobii_camera
         public Tobii()
         {
             InitializeComponent();
-            timer = new Timer();
-            timer.Tick += new EventHandler(timer_Tick);   
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(form_ctrl);
+            timer_back = new System.Timers.Timer();
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
             eyexhost.Start();
             lightlyFilteredGazeDataStream = eyexhost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
             lightlyFilteredGazeDataStream.Next += (s, e) => 視点情報格納(s, e);
@@ -48,8 +54,10 @@ namespace tobii_camera
             PosDataStream.Next += (s, e) =>  眼球位置_XY情報格納(s, e);//何かしらフィルタかけるべきかも
 
 
-            timer.Interval = int.Parse(textBox_interval.Text);
-            timer.Start();
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
+            timer_form.Start();
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_back.Start();
             //System.Diagnostics.Debug.WriteLine(gaze_data.ToString()); 
         }
         public static Tobii Instance
@@ -94,42 +102,46 @@ namespace tobii_camera
                 r_counter = 0;
             }
         }
-        private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
+        private void form_ctrl(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
-             眼球位置_L = 平均計算(POS_L);//何故かAverage()が使えない
-             眼球位置_R = 平均計算(POS_R);
-            視点座標 = 平均計算(POINT);
-
-            if ( 眼球位置_L[0] == 0 &&  眼球位置_R[1] == 0) 目がない = true;
-            else 目がない = false;
-
             if (!目がない && checkBox_mouse.Checked) System.Windows.Forms.Cursor.Position = new System.Drawing.Point(視点座標[0], 視点座標[1]);
 
             label_point.Text = "Point=(" + 視点座標[0] + "," + 視点座標[1] + ")";
             label_L.Text = "L=" +  眼球位置_L[0]+","+眼球位置_L[1];
             label_R.Text = "R=" + 眼球位置_R[0] + "," + 眼球位置_R[1];
+                                    
+        }
+        void back_ctrl(object sender, ElapsedEventArgs e)
+        {
+            眼球位置_L = 平均計算(POS_L);//何故かAverage()が使えない
+            眼球位置_R = 平均計算(POS_R);
+            視点座標 = 平均計算(POINT);
 
-            debug = "count(pos,point)=(" + POS_R.Count +","+POINT.Count+")"+ "\n" +
-                    "Position=" + (( 眼球位置_L[0] +  眼球位置_R[0]) / 2 - pos_max/2) + "\n" +
-                    "diff=" + ( 眼球位置_L[0] -  眼球位置_R[0]) + "\n" +
-                    "Point=(" + 視点座標[0] + "," + 視点座標[1] + ")";
+            if (眼球位置_L[0] == 0 && 眼球位置_R[1] == 0) 目がない = true;
+            else 目がない = false;
+
+            debug =     "count(pos,point)=(" + POS_R.Count + "," + POINT.Count + ")" + "\n" +
+                        "Position=" + ((眼球位置_L[0] + 眼球位置_R[0]) / 2 - pos_max / 2) + "\n" +
+                        "diff=" + (眼球位置_L[0] - 眼球位置_R[0]) + "\n" +
+                        "Point=(" + 視点座標[0] + "," + 視点座標[1] + ")";
 
             POS_L.Clear();
             POS_R.Clear();
             POINT.Clear();
             POINT.Clear();
-                        
         }
-
         private void Click_start(object sender, EventArgs e)
         {
-            timer.Interval = int.Parse(textBox_interval.Text);
-            timer.Start();
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
+            timer_form.Start();
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_back.Start();
         }
 
         private void Click_stop(object sender, EventArgs e)
         {
-            timer.Stop();
+            timer_form.Stop();
+            timer_back.Stop();
         }
         int[] 平均計算(List<int[]> data)
         {

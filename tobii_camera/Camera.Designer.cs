@@ -34,9 +34,11 @@
             this.textBox_resX = new System.Windows.Forms.TextBox();
             this.textBox_resY = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox_FPS = new System.Windows.Forms.TextBox();
+            this.textBox_描画周期 = new System.Windows.Forms.TextBox();
             this.pictureBoxIpl1 = new OpenCvSharp.UserInterface.PictureBoxIpl();
             this.button3 = new System.Windows.Forms.Button();
+            this.textBox_計算周期 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,9 +67,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 115);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.Size = new System.Drawing.Size(97, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "解像度";
+            this.label1.Text = "解像度(USBカメラ)";
             // 
             // textBox_resX
             // 
@@ -88,19 +90,19 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 153);
+            this.label2.Location = new System.Drawing.Point(10, 164);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(26, 12);
+            this.label2.Size = new System.Drawing.Size(76, 12);
             this.label2.TabIndex = 7;
-            this.label2.Text = "FPS";
+            this.label2.Text = "描画周期(ms)";
             // 
-            // textBox_FPS
+            // textBox_描画周期
             // 
-            this.textBox_FPS.Location = new System.Drawing.Point(14, 168);
-            this.textBox_FPS.Name = "textBox_FPS";
-            this.textBox_FPS.Size = new System.Drawing.Size(39, 19);
-            this.textBox_FPS.TabIndex = 8;
-            this.textBox_FPS.Text = "10";
+            this.textBox_描画周期.Location = new System.Drawing.Point(12, 179);
+            this.textBox_描画周期.Name = "textBox_描画周期";
+            this.textBox_描画周期.Size = new System.Drawing.Size(39, 19);
+            this.textBox_描画周期.TabIndex = 8;
+            this.textBox_描画周期.Text = "50";
             // 
             // pictureBoxIpl1
             // 
@@ -121,15 +123,34 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.Click_IP);
             // 
+            // textBox_計算周期
+            // 
+            this.textBox_計算周期.Location = new System.Drawing.Point(12, 220);
+            this.textBox_計算周期.Name = "textBox_計算周期";
+            this.textBox_計算周期.Size = new System.Drawing.Size(39, 19);
+            this.textBox_計算周期.TabIndex = 12;
+            this.textBox_計算周期.Text = "50";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 205);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(76, 12);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "計算周期(ms)";
+            // 
             // Camera
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(685, 453);
+            this.Controls.Add(this.textBox_計算周期);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.pictureBoxIpl1);
-            this.Controls.Add(this.textBox_FPS);
+            this.Controls.Add(this.textBox_描画周期);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox_resY);
             this.Controls.Add(this.textBox_resX);
@@ -153,8 +174,10 @@
         private System.Windows.Forms.TextBox textBox_resX;
         private System.Windows.Forms.TextBox textBox_resY;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox_FPS;
+        private System.Windows.Forms.TextBox textBox_描画周期;
         private OpenCvSharp.UserInterface.PictureBoxIpl pictureBoxIpl1;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox textBox_計算周期;
+        private System.Windows.Forms.Label label3;
     }
 }

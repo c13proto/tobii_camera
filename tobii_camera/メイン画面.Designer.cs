@@ -33,7 +33,7 @@
             this.button_start = new System.Windows.Forms.Button();
             this.label_debug = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox_fps = new System.Windows.Forms.TextBox();
+            this.textBox_描画周期 = new System.Windows.Forms.TextBox();
             this.textBox_window_y = new System.Windows.Forms.TextBox();
             this.textBox_window_x = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,6 +42,11 @@
             this.textBox_average = new System.Windows.Forms.TextBox();
             this.textBox_radius = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.textBox_計算周期 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.checkBox_circle = new System.Windows.Forms.CheckBox();
+            this.checkBox_green = new System.Windows.Forms.CheckBox();
+            this.checkBox_point = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button_Camera
@@ -66,7 +71,7 @@
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(11, 232);
+            this.button_start.Location = new System.Drawing.Point(11, 362);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(75, 23);
             this.button_start.TabIndex = 2;
@@ -89,21 +94,21 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 118);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.Size = new System.Drawing.Size(76, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "更新間隔(fps)";
+            this.label1.Text = "描画周期(ms)";
             // 
-            // textBox_fps
+            // textBox_描画周期
             // 
-            this.textBox_fps.Location = new System.Drawing.Point(61, 134);
-            this.textBox_fps.Name = "textBox_fps";
-            this.textBox_fps.Size = new System.Drawing.Size(25, 19);
-            this.textBox_fps.TabIndex = 5;
-            this.textBox_fps.Text = "30";
+            this.textBox_描画周期.Location = new System.Drawing.Point(61, 133);
+            this.textBox_描画周期.Name = "textBox_描画周期";
+            this.textBox_描画周期.Size = new System.Drawing.Size(25, 19);
+            this.textBox_描画周期.TabIndex = 5;
+            this.textBox_描画周期.Text = "50";
             // 
             // textBox_window_y
             // 
-            this.textBox_window_y.Location = new System.Drawing.Point(57, 164);
+            this.textBox_window_y.Location = new System.Drawing.Point(57, 220);
             this.textBox_window_y.Name = "textBox_window_y";
             this.textBox_window_y.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_y.TabIndex = 6;
@@ -111,7 +116,7 @@
             // 
             // textBox_window_x
             // 
-            this.textBox_window_x.Location = new System.Drawing.Point(26, 164);
+            this.textBox_window_x.Location = new System.Drawing.Point(26, 220);
             this.textBox_window_x.Name = "textBox_window_x";
             this.textBox_window_x.Size = new System.Drawing.Size(25, 19);
             this.textBox_window_x.TabIndex = 7;
@@ -120,7 +125,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 149);
+            this.label2.Location = new System.Drawing.Point(9, 205);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 12);
             this.label2.TabIndex = 8;
@@ -139,7 +144,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 192);
+            this.label3.Location = new System.Drawing.Point(9, 248);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 10;
@@ -147,7 +152,7 @@
             // 
             // textBox_average
             // 
-            this.textBox_average.Location = new System.Drawing.Point(61, 189);
+            this.textBox_average.Location = new System.Drawing.Point(61, 245);
             this.textBox_average.Name = "textBox_average";
             this.textBox_average.Size = new System.Drawing.Size(25, 19);
             this.textBox_average.TabIndex = 11;
@@ -155,7 +160,7 @@
             // 
             // textBox_radius
             // 
-            this.textBox_radius.Location = new System.Drawing.Point(61, 208);
+            this.textBox_radius.Location = new System.Drawing.Point(61, 264);
             this.textBox_radius.Name = "textBox_radius";
             this.textBox_radius.Size = new System.Drawing.Size(25, 19);
             this.textBox_radius.TabIndex = 13;
@@ -164,18 +169,76 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 211);
+            this.label4.Location = new System.Drawing.Point(9, 267);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 12;
             this.label4.Text = "許容半径";
+            // 
+            // textBox_計算周期
+            // 
+            this.textBox_計算周期.Location = new System.Drawing.Point(61, 170);
+            this.textBox_計算周期.Name = "textBox_計算周期";
+            this.textBox_計算周期.Size = new System.Drawing.Size(25, 19);
+            this.textBox_計算周期.TabIndex = 15;
+            this.textBox_計算周期.Text = "50";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 155);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(76, 12);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "計算周期(ms)";
+            // 
+            // checkBox_circle
+            // 
+            this.checkBox_circle.AutoSize = true;
+            this.checkBox_circle.Checked = true;
+            this.checkBox_circle.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_circle.Location = new System.Drawing.Point(11, 288);
+            this.checkBox_circle.Name = "checkBox_circle";
+            this.checkBox_circle.Size = new System.Drawing.Size(69, 16);
+            this.checkBox_circle.TabIndex = 16;
+            this.checkBox_circle.Text = "円を表示";
+            this.checkBox_circle.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_green
+            // 
+            this.checkBox_green.AutoSize = true;
+            this.checkBox_green.Checked = true;
+            this.checkBox_green.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_green.Location = new System.Drawing.Point(11, 310);
+            this.checkBox_green.Name = "checkBox_green";
+            this.checkBox_green.Size = new System.Drawing.Size(72, 16);
+            this.checkBox_green.TabIndex = 17;
+            this.checkBox_green.Text = "緑線表示";
+            this.checkBox_green.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_point
+            // 
+            this.checkBox_point.AutoSize = true;
+            this.checkBox_point.Checked = true;
+            this.checkBox_point.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_point.Location = new System.Drawing.Point(11, 332);
+            this.checkBox_point.Name = "checkBox_point";
+            this.checkBox_point.Size = new System.Drawing.Size(72, 16);
+            this.checkBox_point.TabIndex = 18;
+            this.checkBox_point.Text = "視点表示";
+            this.checkBox_point.UseVisualStyleBackColor = true;
             // 
             // メイン画面
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(316, 267);
+            this.ClientSize = new System.Drawing.Size(532, 397);
+            this.Controls.Add(this.checkBox_point);
+            this.Controls.Add(this.checkBox_green);
+            this.Controls.Add(this.checkBox_circle);
+            this.Controls.Add(this.textBox_計算周期);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox_radius);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBox_average);
@@ -184,7 +247,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox_window_x);
             this.Controls.Add(this.textBox_window_y);
-            this.Controls.Add(this.textBox_fps);
+            this.Controls.Add(this.textBox_描画周期);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_debug);
             this.Controls.Add(this.button_start);
@@ -203,7 +266,7 @@
         private System.Windows.Forms.Button button_Tobii;
         private System.Windows.Forms.Button button_start;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox_fps;
+        private System.Windows.Forms.TextBox textBox_描画周期;
         private System.Windows.Forms.Label label_debug;
         private System.Windows.Forms.TextBox textBox_window_y;
         private System.Windows.Forms.TextBox textBox_window_x;
@@ -213,6 +276,11 @@
         private System.Windows.Forms.TextBox textBox_average;
         private System.Windows.Forms.TextBox textBox_radius;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBox_計算周期;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkBox_circle;
+        private System.Windows.Forms.CheckBox checkBox_green;
+        private System.Windows.Forms.CheckBox checkBox_point;
     }
 }
 

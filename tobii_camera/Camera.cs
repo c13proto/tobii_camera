@@ -34,7 +34,7 @@ namespace tobii_camera
         {
             InitializeComponent();
             timer_back = new System.Timers.Timer();
-            timer_back.Elapsed += new ElapsedEventHandler(background_ctrl);
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
             timer_form = new System.Windows.Forms.Timer();
             timer_form.Tick += new EventHandler(form_ctrl);
         }
@@ -56,9 +56,9 @@ namespace tobii_camera
             IPcamera = false;
             CAPTURE = Cv.CreateCameraCapture(0);
             解像度設定(int.Parse(textBox_resX.Text), int.Parse(textBox_resY.Text));
-            CAPTURE.Fps = int.Parse(textBox_FPS.Text);
-            timer_back.Interval = (int)(1000 / int.Parse(textBox_FPS.Text));
-            timer_form.Interval = (int)(1000 / int.Parse(textBox_FPS.Text));
+            CAPTURE.Fps = 1000/int.Parse(textBox_描画周期.Text);
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
             timer_form.Start();
             timer_back.Start();
         }
@@ -66,7 +66,7 @@ namespace tobii_camera
         {
                 pictureBoxIpl1.RefreshIplImage(camera);
         }
-        void background_ctrl(object sender, ElapsedEventArgs e)
+        void back_ctrl(object sender, ElapsedEventArgs e)
         {            
             if (!IPcamera)//usbカメラの処理
             {
@@ -115,8 +115,8 @@ namespace tobii_camera
             IPcamera = true;            
             CAPTURE_IP = new byte[int.Parse(textBox_resX.Text) * int.Parse(textBox_resY.Text)];
 
-            timer_back.Interval = (int)(1000 / int.Parse(textBox_FPS.Text));
-            timer_form.Interval = (int)(1000 / int.Parse(textBox_FPS.Text));
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
             timer_form.Start();
             timer_back.Start();
 

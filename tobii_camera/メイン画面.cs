@@ -7,17 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using OpenCvSharp;
+using System.Timers;
 
 namespace tobii_camera
 {
     public partial class メイン画面 : Form
     {
-        private Timer timer;
+        //private System.Timers.Timer timer_back;
+        private System.Windows.Forms.Timer timer_form;
         public static int[] window=new int[2];
-        public static int fps;
+        public static int 描画周期;
+        public static int 計算周期;
         public static IplImage background;
         public static int average_num;
         public static int radius;
+        public static bool 円を表示 = true;
+        public static bool 緑線を表示 = true;
+        public static bool 視点を表示 = true;
 
         public メイン画面()
         {
@@ -28,10 +34,10 @@ namespace tobii_camera
 
             //Camera.Instance.Show();
             Tobii.Instance.Show();
-            timer = new Timer();
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = (int)(1000 / int.Parse(textBox_fps.Text));
-            timer.Start();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(timer_Tick);
+            timer_form.Interval =int.Parse(textBox_描画周期.Text);
+            timer_form.Start();
 
         }
 
@@ -57,9 +63,14 @@ namespace tobii_camera
             //描画に使うデータ格納
             window[0] = int.Parse(textBox_window_x.Text);
             window[1] = int.Parse(textBox_window_y.Text);
-            fps = int.Parse(textBox_fps.Text);
+            描画周期 = int.Parse(textBox_描画周期.Text);
+            計算周期 = int.Parse(textBox_計算周期.Text);
             average_num = int.Parse(textBox_average.Text);
             radius = int.Parse(textBox_radius.Text);
+            円を表示 = checkBox_circle.Checked;
+            緑線を表示 = checkBox_green.Checked;
+            視点を表示 = checkBox_point.Checked;
+
             描画画面.Instance.Show();
         }
 
