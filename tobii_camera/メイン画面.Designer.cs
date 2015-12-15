@@ -255,6 +255,7 @@
             this.Controls.Add(this.button_Camera);
             this.Name = "メイン画面";
             this.Text = "main";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.メイン画面_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

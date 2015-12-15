@@ -33,10 +33,6 @@ namespace tobii_camera
         public Camera()
         {
             InitializeComponent();
-            timer_back = new System.Timers.Timer();
-            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
-            timer_form = new System.Windows.Forms.Timer();
-            timer_form.Tick += new EventHandler(form_ctrl);
         }
 
         public static Camera Instance
@@ -57,14 +53,17 @@ namespace tobii_camera
             CAPTURE = Cv.CreateCameraCapture(0);
             解像度設定(int.Parse(textBox_resX.Text), int.Parse(textBox_resY.Text));
             CAPTURE.Fps = 1000/int.Parse(textBox_描画周期.Text);
-            timer_back.Interval = int.Parse(textBox_計算周期.Text);
-            timer_form.Interval = int.Parse(textBox_描画周期.Text);
-            timer_form.Start();
-            timer_back.Start();
+            タイマー開始();
+        }
+        private void Click_IP(object sender, EventArgs e)
+        {
+            IPcamera = true;
+            CAPTURE_IP = new byte[int.Parse(textBox_resX.Text) * int.Parse(textBox_resY.Text)];
+            タイマー開始();
         }
         private void form_ctrl(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
-                pictureBoxIpl1.RefreshIplImage(camera);
+            if(checkBox_映像確認.Checked)pictureBoxIpl1.RefreshIplImage(camera);
         }
         void back_ctrl(object sender, ElapsedEventArgs e)
         {            
@@ -90,37 +89,40 @@ namespace tobii_camera
         }
         private void Click_Stop(object sender, EventArgs e)
         {
-            Cv.ReleaseImage(camera);
-            camera = null;
-            timer_form.Stop();
-            timer_back.Stop();
+            タイマー停止();
         }
-
         void 解像度設定(int x,int y)
         {
             Cv.SetCaptureProperty(CAPTURE, CaptureProperty.FrameWidth, x);
             Cv.SetCaptureProperty(CAPTURE, CaptureProperty.FrameHeight,y);
         }
 
-        private void Camera_FormClosing(object sender, FormClosingEventArgs e)
+        void タイマー開始()
         {
-            timer_form.Stop();
-            timer_back.Stop();
-            Cv.ReleaseImage(camera);
-            camera = null;
-        }
-
-        private void Click_IP(object sender, EventArgs e)
-        {
-            IPcamera = true;            
-            CAPTURE_IP = new byte[int.Parse(textBox_resX.Text) * int.Parse(textBox_resY.Text)];
-
-            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            if (timer_form != null) timer_form.Dispose();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(form_ctrl);
             timer_form.Interval = int.Parse(textBox_描画周期.Text);
             timer_form.Start();
-            timer_back.Start();
 
+            if (timer_back != null) timer_back.Dispose();
+            timer_back = new System.Timers.Timer();
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_back.Start();
+        }
+        void タイマー停止()
+        {
+            timer_form.Stop();
+            timer_form.Dispose();
+
+            timer_back.Stop();
+            timer_back.Dispose();
         }
 
+        private void Camera_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            タイマー停止();
+        }
     }
 }

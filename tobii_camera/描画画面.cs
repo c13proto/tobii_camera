@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenCvSharp;
 using System.Timers;
+using System.Diagnostics;
 
 namespace tobii_camera
 {
@@ -35,6 +36,8 @@ namespace tobii_camera
         int vertical_counter;
         int horizontal_line;
         int horizontal_counter;
+
+        PerformanceCounter[] PC;
         public 描画画面()
         {
             InitializeComponent();
@@ -56,16 +59,9 @@ namespace tobii_camera
             point_old = new CvPoint(window_size.Width / 2, window_size.Height / 2);
             許容半径 = メイン画面.radius;
 
-            timer_form = new System.Windows.Forms.Timer();
-            timer_form.Tick += new EventHandler(form_ctrl);
-            timer_form.Interval = メイン画面.描画周期;
-            timer_form.Start();
+            PC=new System.Diagnostics.PerformanceCounter[3];
 
-            timer_back = new System.Timers.Timer();
-            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
-            timer_back.Interval = メイン画面.計算周期;
-            timer_back.Start();
-
+            タイマー開始();
         }
 
         public static 描画画面 Instance
@@ -184,7 +180,6 @@ namespace tobii_camera
                 points.RemoveAt(0);//先頭を削除
                 points.Add(new CvPoint(Tobii.視点座標[0], Tobii.視点座標[1]));
             }
-
         }
         CvPoint ave_CvPoints(List<CvPoint> points)
         {
@@ -203,7 +198,6 @@ namespace tobii_camera
         {
             垂直線描画(ref src);
             水平線描画(ref src);
-
         }
         void 水平線描画(ref IplImage src)
         {
@@ -255,11 +249,40 @@ namespace tobii_camera
         }
         void debug描画(ref IplImage src)
         {
-            string[] debug=Tobii.debug.Split('\n');
-            CvFont フォント = new CvFont(FontFace.HersheyComplex, 0.5, 0.5);        
+            string[] debug = Tobii.debug.Split('\n');
+            CvFont フォント = new CvFont(FontFace.HersheyComplex, 0.5, 0.5);
             Cv.PutText(src, debug[0], new CvPoint(10, 20), フォント, new CvColor(255, 255, 255));
             Cv.PutText(src, debug[1], new CvPoint(10, 40), フォント, new CvColor(255, 255, 255));
             Cv.PutText(src, debug[2], new CvPoint(10, 60), フォント, new CvColor(255, 255, 255));
+
         }
+        void タイマー開始()
+        {
+            if (timer_form != null) timer_form.Dispose();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(form_ctrl);
+            timer_form.Interval = メイン画面.描画周期;
+            timer_form.Start();
+
+            if(timer_back!=null)timer_back.Dispose();
+            timer_back = new System.Timers.Timer();
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
+            timer_back.Interval = メイン画面.計算周期;
+            timer_back.Start();
+        }
+        void タイマー停止()
+        {
+            timer_back.Stop();
+            timer_back.Dispose();
+
+            timer_form.Stop();
+            timer_form.Dispose();
+        }
+
+        private void 描画画面_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            タイマー停止();
+        }
+
     }
 }

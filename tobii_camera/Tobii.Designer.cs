@@ -154,6 +154,7 @@
             this.KeyPreview = true;
             this.Name = "Tobii";
             this.Text = "Tobii";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Tobii_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

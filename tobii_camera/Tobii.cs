@@ -43,21 +43,14 @@ namespace tobii_camera
         public Tobii()
         {
             InitializeComponent();
-            timer_form = new System.Windows.Forms.Timer();
-            timer_form.Tick += new EventHandler(form_ctrl);
-            timer_back = new System.Timers.Timer();
-            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
             eyexhost.Start();
             lightlyFilteredGazeDataStream = eyexhost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
             lightlyFilteredGazeDataStream.Next += (s, e) => 視点情報格納(s, e);
             PosDataStream=eyexhost.CreateEyePositionDataStream();
-            PosDataStream.Next += (s, e) =>  眼球位置_XY情報格納(s, e);//何かしらフィルタかけるべきかも
+            PosDataStream.Next += (s, e) =>  眼球位置_XY情報格納(s, e);
 
 
-            timer_form.Interval = int.Parse(textBox_描画周期.Text);
-            timer_form.Start();
-            timer_back.Interval = int.Parse(textBox_計算周期.Text);
-            timer_back.Start();
+            タイマー開始();
             //System.Diagnostics.Debug.WriteLine(gaze_data.ToString()); 
         }
         public static Tobii Instance
@@ -104,12 +97,14 @@ namespace tobii_camera
         }
         private void form_ctrl(object sender, EventArgs e)//タイマ割り込みで行う処理
         {
-            if (!目がない && checkBox_mouse.Checked) System.Windows.Forms.Cursor.Position = new System.Drawing.Point(視点座標[0], 視点座標[1]);
+            if (視点座標 != null)//こうしておかないと失敗すること多い
+            {
+                if (!目がない && checkBox_mouse.Checked) System.Windows.Forms.Cursor.Position = new System.Drawing.Point(視点座標[0], 視点座標[1]);
 
-            label_point.Text = "Point=(" + 視点座標[0] + "," + 視点座標[1] + ")";
-            label_L.Text = "L=" +  眼球位置_L[0]+","+眼球位置_L[1];
-            label_R.Text = "R=" + 眼球位置_R[0] + "," + 眼球位置_R[1];
-                                    
+                label_point.Text = "Point=(" + 視点座標[0] + "," + 視点座標[1] + ")";
+                label_L.Text = "L=" + 眼球位置_L[0] + "," + 眼球位置_L[1];
+                label_R.Text = "R=" + 眼球位置_R[0] + "," + 眼球位置_R[1];
+            }
         }
         void back_ctrl(object sender, ElapsedEventArgs e)
         {
@@ -128,20 +123,15 @@ namespace tobii_camera
             POS_L.Clear();
             POS_R.Clear();
             POINT.Clear();
-            POINT.Clear();
         }
         private void Click_start(object sender, EventArgs e)
         {
-            timer_form.Interval = int.Parse(textBox_描画周期.Text);
-            timer_form.Start();
-            timer_back.Interval = int.Parse(textBox_計算周期.Text);
-            timer_back.Start();
+            タイマー開始();
         }
 
         private void Click_stop(object sender, EventArgs e)
         {
-            timer_form.Stop();
-            timer_back.Stop();
+            タイマー停止();
         }
         int[] 平均計算(List<int[]> data)
         {
@@ -158,5 +148,32 @@ namespace tobii_camera
         }
 
 
+        void タイマー開始()
+        {
+            if(timer_form!=null)timer_form.Dispose();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(form_ctrl);
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
+            timer_form.Start();
+
+            if (timer_back != null) timer_back.Dispose();
+            timer_back = new System.Timers.Timer();
+            timer_back.Elapsed += new ElapsedEventHandler(back_ctrl);
+            timer_back.Interval = int.Parse(textBox_計算周期.Text);
+            timer_back.Start();
+        }
+        void タイマー停止()
+        {
+            timer_form.Stop();
+            timer_form.Dispose();
+
+            timer_back.Stop();
+            timer_back.Dispose();
+        }
+
+        private void Tobii_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            タイマー停止();
+        }
     }
 }

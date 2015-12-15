@@ -34,10 +34,7 @@ namespace tobii_camera
 
             //Camera.Instance.Show();
             Tobii.Instance.Show();
-            timer_form = new System.Windows.Forms.Timer();
-            timer_form.Tick += new EventHandler(timer_Tick);
-            timer_form.Interval =int.Parse(textBox_描画周期.Text);
-            timer_form.Start();
+            タイマー開始();
 
         }
 
@@ -52,10 +49,8 @@ namespace tobii_camera
         }
 
         private void timer_Tick(object sender, EventArgs e)//タイマ割り込みで行う処理
-        {
-            
+        {            
             label_debug.Text = Tobii.debug;
-
         }
 
         private void Click_start(object sender, EventArgs e)
@@ -92,7 +87,28 @@ namespace tobii_camera
                 background.Zero();
                 var buff = new IplImage(dialog.FileName, LoadMode.Color);
                 buff.Resize(background);
+                buff.Dispose();
             }
+        }
+
+
+        void タイマー開始()
+        {
+            if (timer_form != null) timer_form.Dispose();
+            timer_form = new System.Windows.Forms.Timer();
+            timer_form.Tick += new EventHandler(timer_Tick);
+            timer_form.Interval = int.Parse(textBox_描画周期.Text);
+            timer_form.Start();
+        }
+        void タイマー停止()
+        {
+            timer_form.Stop();
+            timer_form.Dispose();
+        }
+
+        private void メイン画面_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            タイマー停止();
         }
     }
 }

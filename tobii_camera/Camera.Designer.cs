@@ -39,6 +39,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.textBox_計算周期 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.checkBox_映像確認 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -140,12 +141,25 @@
             this.label3.TabIndex = 11;
             this.label3.Text = "計算周期(ms)";
             // 
+            // checkBox_映像確認
+            // 
+            this.checkBox_映像確認.AutoSize = true;
+            this.checkBox_映像確認.Checked = true;
+            this.checkBox_映像確認.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_映像確認.Location = new System.Drawing.Point(12, 246);
+            this.checkBox_映像確認.Name = "checkBox_映像確認";
+            this.checkBox_映像確認.Size = new System.Drawing.Size(72, 16);
+            this.checkBox_映像確認.TabIndex = 13;
+            this.checkBox_映像確認.Text = "映像確認";
+            this.checkBox_映像確認.UseVisualStyleBackColor = true;
+            // 
             // Camera
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(685, 453);
+            this.Controls.Add(this.checkBox_映像確認);
             this.Controls.Add(this.textBox_計算周期);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
@@ -179,5 +193,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox_計算周期;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBox_映像確認;
     }
 }
