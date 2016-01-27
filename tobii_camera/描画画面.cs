@@ -108,7 +108,6 @@ namespace tobii_camera
             if(メイン画面.円を表示)Cv.Circle(src, point, 許容半径, new CvScalar(255, 255, 255));
             首の動きで座標操作(ref point);
 
-
             枠外を塗りつぶす(ref src, new CvRect(new CvPoint(point.X-window_size.Width/2,point.Y-window_size.Height/2), window_size));
 
             point_old = point;

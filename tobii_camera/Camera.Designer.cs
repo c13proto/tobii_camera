@@ -103,7 +103,7 @@
             this.textBox_描画周期.Name = "textBox_描画周期";
             this.textBox_描画周期.Size = new System.Drawing.Size(39, 19);
             this.textBox_描画周期.TabIndex = 8;
-            this.textBox_描画周期.Text = "50";
+            this.textBox_描画周期.Text = "200";
             // 
             // pictureBoxIpl1
             // 
@@ -130,7 +130,7 @@
             this.textBox_計算周期.Name = "textBox_計算周期";
             this.textBox_計算周期.Size = new System.Drawing.Size(39, 19);
             this.textBox_計算周期.TabIndex = 12;
-            this.textBox_計算周期.Text = "50";
+            this.textBox_計算周期.Text = "200";
             // 
             // label3
             // 
